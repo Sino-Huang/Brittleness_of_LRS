@@ -19,8 +19,8 @@ This is the code for preprint paper *A Reminder of its Brittleness: Language Rew
 
 ```bash
 export PYTHONPATH=`pwd`
+
 python rnd_rl_env_false_positive_simulation/train.py -m rl_data_files.rl_task=0,1 rl_params.whether_shorter_chunks=True,False rl_params.more_restrict_flag=True,False rl_params.follow_temporal_order=True,False CONSTANT.RANDOM_SEED=1,2,3,4,5,6,7,8,9,10
-python rnd_rl_env_false_positive_simulation/train.py -m rl_data_files.rl_task=2 rl_pa
 ```
 
 
