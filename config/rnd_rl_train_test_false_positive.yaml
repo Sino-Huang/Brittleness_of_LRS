@@ -1,0 +1,95 @@
+defaults:
+  - default_config
+  - lang_rew_module
+  - _self_
+
+hydra:
+  job:
+    chdir: True
+    name: "SEED-${CONSTANT.RANDOM_SEED}-Montezuma_task_${rl_data_files.rl_task}_RND_rl_Test_False_Positive_ifShort-${rl_params.whether_shorter_chunks}_Follow_Temp_Order-${rl_params.follow_temporal_order}_More_Restrict-${rl_params.more_restrict_flag}"
+#    name: "SEED-${CONSTANT.RANDOM_SEED}-Montezuma_task_${rl_data_files.rl_task}RND_rl_baseline"
+  run:
+    dir: "outputs/${now:%Y-%m-%d}/rl_env_train_test_false_positive_${now:%H-%M-%S}"
+
+CONSTANT:
+  ENV_NAME: 'MontezumaRevengeNoFrameskip-v4' # BreakoutNoFrameskip-v4 MontezumaRevengeNoFrameskip-v4
+  N_ACTIONS: 8 # In the future we will change this to 8
+  MAX_STEPS: 1000
+  RANDOM_START: 30
+  IMG_MEAN: "[0.485 * 255.0, 0.456 * 255.0, 0.406 * 255.0]"
+  IMG_STD: "[0.229 * 255.0, 0.224 * 255.0, 0.225 * 255.0]"
+  RANDOM_SEED: 1
+
+data_files:
+  use_wandb: True
+
+rl_params:
+  algo: rnd # Algorithm to use: rnd | ppo
+  lr: 1.0e-4
+  num_step: 128 # number of forward steps
+  eps: 0.1 # TODO may increase this to explore more
+  ext_gamma: 0.99
+  int_gamma: 0.99
+  use_gae: True # 'use generalized advantage estimation (default: True)'
+  gae_lambda: 0.95 # Lambda coefficient in GAE formula (default: 0.95, 1 means no gae)
+  use_noisy_net: False # use NoisyNet
+  sticky_action: True #
+  sticky_action_prob: 0.25
+  mini_batch: 4
+  entropy_coef: 0.001
+  ext_coef: 3.0 # this will become the coef for lang rew if lang rew is activated
+  int_coef: 1.0 # TODO set to 0.0 it will become pure PPO, default 1.0
+  max_episode_steps: 1200
+  pre_obs_norm_steps: 50
+  save_interval: 100
+  load_model: False
+  log_dir: None
+  save_dir: "rl_trained_models_test_false_positive"
+  recurrent_policy: False
+  batch_size: 256 # 800 for 25, 4096 for 128, 2048 for 64, 512 for 16 num worker CHANGEABLE batch_size = int(args.num_step * args.num_worker / args.mini_batch)
+
+
+  num_worker: 8
+
+
+
+  # lang rew configs
+  max_decay_coef: 1.0 # 0.99999, if do not want to change, then set to 1.0
+  lang_rew_mode: 5 # 1. binary cls 2. binary cls hard neg  3. goyal (tested) 4. event det  5. event det hard neg
+  # looks like binary classification can be used for easy and normal task
+  # event det can be used for hard task
+
+  # test false positive config
+  follow_temporal_order: True # True meaning the later walkthrough scoring is only activated once we complete the previous one
+  more_restrict_flag: True # True meaning only both action and state constraints satisfy then we give reward, otherwise we allow partial rewards
+  whether_shorter_chunks: True # IMPORTANT shorter chunk means the simulated language instruction will only match shorter chunk of trajectory, this will lead to different effect
+
+
+rl_data_files:
+  rl_task: 2 # 0 easy, 1 normal, 2 hard
+
+  whether_hard_instruction: True # whether we want complex instructions to make the multimodal task easier
+
+  lang_rew_module_dictpath_binary_cls: "saved_model/trained_model/bi_cls-obj_det-T-rel_off-T-act_pred-T-neg_rat-1.0.pth"
+  lang_rew_module_dictpath_binary_cls_hard_negative: "saved_model/trained_model/bi_cls-obj_det-T-rel_off-T-act_pred-T-neg_rat-0.7.pth"
+  lang_rew_module_dictpath_event_det: "saved_model/trained_model/event_det-obj_det-T-rel_off-T-act_pred-T-neg_rat-1.0.pth"
+  lang_rew_module_dictpath_event_det_hard_negative: "saved_model/trained_model/event_det-obj_det-T-rel_off-T-act_pred-T-neg_rat-0.7.pth"
+  lang_rew_module_dictpath_goyal: "goyal_original/original_goyal_lang_rew_state_dict.pth"
+
+  easy_task_saved_state: "${data_files.data_path}/testing_data/easy_task/easy_mr_system_state_cross_laser_gate_room_0.pkl"
+  normal_task_saved_state: "${data_files.data_path}/testing_data/normal_task/normal_mr_system_state_torch_room_5.pkl"
+  hard_task_saved_state: "${data_files.data_path}/testing_data/hard_task/hard_mr_system_state_grab_key_room_1.pkl"
+
+  hard_task_walkthrough_filepath_no_hard: '${data_files.data_path}/testing_data/hard_task/test_text_dict_no_hard.pkl' # key: 'spell_correction_txt', embedding
+  hard_task_walkthrough_filepath: '${data_files.data_path}/testing_data/hard_task/test_text_dict.pkl' # key: 'spell_correction_txt', embedding
+  hard_task_walkthrough_filepath_goyal: '${data_files.data_path}/testing_data/hard_task/test_text_dict_glove.pkl'# key: embedding, sentence
+
+  normal_task_walkthrough_filepath_no_hard: '${data_files.data_path}/testing_data/normal_task/test_text_dict_no_hard.pkl' # key: 'spell_correction_txt', embedding
+  normal_task_walkthrough_filepath: '${data_files.data_path}/testing_data/normal_task/test_text_dict.pkl' # key: 'spell_correction_txt', embedding
+  normal_task_walkthrough_filepath_goyal: '${data_files.data_path}/testing_data/normal_task/test_text_dict_glove.pkl'# key: embedding, sentence
+
+  easy_task_walkthrough_filepath_no_hard: '${data_files.data_path}/testing_data/easy_task/test_text_dict_no_hard.pkl' # key: 'spell_correction_txt', embedding
+  easy_task_walkthrough_filepath: '${data_files.data_path}/testing_data/easy_task/test_text_dict.pkl' # key: 'spell_correction_txt', embedding
+  easy_task_walkthrough_filepath_goyal: '${data_files.data_path}/testing_data/easy_task/test_text_dict_glove.pkl'# key: embedding, sentence
+
+

@@ -1,0 +1,57 @@
+# computation
+# run this command too: `conda install -c conda-forge cudatoolkit-dev`
+# pip install -r requirements.txt --ignore-installed
+
+--extra-index-url https://developer.download.nvidia.com/compute/redist
+nvidia-dali-cuda110
+tqdm
+ipywidgets
+widgetsnbextension
+pandas-profiling
+notebook
+opencv-python==4.5.5.62
+pandas
+einops
+matplotlib
+scikit-learn
+scipy
+seaborn
+imageio
+av
+
+--extra-index-url https://download.pytorch.org/whl/cu116
+torch
+torchvision
+torchaudio
+numba
+rotary-embedding-torch
+einops-exts
+video-diffusion-pytorch
+nfnets-pytorch
+sru==3.0.0.dev6
+thop
+
+# reinforcement learning library
+tianshou
+# stable-baselines3[extra]
+
+# nlp packages
+transformers
+sentence-transformers
+torchtext
+symspellpy
+nltk
+flair
+
+# logging
+wandb
+hydra-core
+
+# atari environment atari-py is outdated by stable-baseline3 is using it
+ale-py
+pygame
+gym[atari, accept-rom-license]<=0.25.2
+autorom[accept-rom-license]
+envpool
+# after that you may need to run AutoRom to install the environment
+pysimplegui

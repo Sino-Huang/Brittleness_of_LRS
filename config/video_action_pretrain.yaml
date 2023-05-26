@@ -1,0 +1,38 @@
+defaults:
+  - default_config
+  - _self_
+
+hydra:
+  run:
+    dir: "outputs/${now:%Y-%m-%d}/video_action_predictor_${now:%H-%M-%S}"
+  job:
+    name: "video_action_predictor_pretrain"
+
+visual_action_predictor_params:
+  wd: 5.0e-2 # weight decay
+  lr: 0.001 # initial learning rate
+  optimizer: "adam" # sgd | adam
+  batch_size: 128
+
+  conv_depths: [3,3,3]
+  conv_dims: [96,96,96]
+
+
+  saved_path_folder: "${data_files.saved_path_parent_folder}/video_action_predictor_saved_model"
+  visual_encoder_state_dict_path: "${visual_action_predictor_params.saved_path_folder}/visual_action_predictor_best_state_dict.pth"
+  visual_encoder_state_dict_path_final: "${visual_action_predictor_params.saved_path_folder}/visual_action_predictor_final_state_dict.pth"
+  visual_n_epoch: 200 # epoch for visual model
+
+
+  result:
+    val_loss:
+    state_dict_path:
+
+
+
+data_files:
+  pretrain_image_jpeg_training_folder: "../MontezumaRevenge_human/human_replay_screenshot_jpeg" # store atari montezuma's revenge image about 1M
+  pretrain_image_jpeg_testing_folder: "../MontezumaRevenge_human/human_replay_screenshot_jpeg_test"
+  pretrain_action_folder: "../MontezumaRevenge_human/atari_v1/trajectories/revenge"
+
+  use_wandb: True # if True, we will use wandb, usually we test once and set it to True

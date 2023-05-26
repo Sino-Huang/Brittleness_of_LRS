@@ -1,0 +1,9 @@
+job.sh
+sync_to_server.sh
+exclude_folder.txt
+run_on_server.sh
+data/*
+!data/*.ipynb
+saved_model/*
+outputs/*
+multirun/*

@@ -1,0 +1,38 @@
+params:
+  batch_size: 32
+  is_action_frequency: True
+  window_size: 10
+  dropout_rate: 0.2 # dropout rate, also drop path rate
+  wd: 5.0e-2 # weight decay
+  lang_enc_size: 128 # encoding feature dim in LSTM
+  action_enc_size: 128 # encoding feature dim for action
+  #  mode: "eval" # for evaluation.py, we need to set mode to eval
+  norm_layer: "batchnorm" # batchnorm | layernorm
+  # we use sgd for classification problem
+  lr: 0.001 # initial learning rate
+  optimizer: "adam" # sgd | adam
+  n_epochs: 200 # number of epochs
+  want_image: False # add image as input will decrease the acc
+
+
+device_info:
+  device_id: 0
+  num_gpus: 1
+  device: "cuda:0" # "cpu" | "cuda:0"
+  num_workers: 2 # 1: 6.79 it/s 2: 14.76 it/s
+
+CONSTANT:
+  MAX_LENGTH: 128
+  BERT_EMB_DIM: 768
+  SEN_EMB_DIM: 768
+  GLOVE_EMB_DIM: 50
+  ATARI_LANG_FOLDER: "/home/sukai/Documents/Sukai_Project/MontezumaRevenge_Goyal/atari-lang" # raw data
+  ATARI_ACITON_FOLDER: "/home/sukai/Documents/Sukai_Project/MontezumaRevenge_human/atari_v1/trajectories/revenge"
+  RESIZE: 96
+  CLIP_LENGTH: 150
+  N_ACTIONS: 18
+  ANNOTATION_FILE_SIZE: 6870
+  RANDOM_SEED: 12
+  IMG_MEAN: "[0.485 * 255.0, 0.456 * 255.0, 0.406 * 255.0]"
+  IMG_STD: "[0.229 * 255.0, 0.224 * 255.0, 0.225 * 255.0]"
+

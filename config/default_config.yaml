@@ -1,0 +1,44 @@
+# this will set different working directory for each run
+hydra:
+  job:
+    chdir: True
+
+device_info:
+  device_id: 0
+  num_gpus: 1
+  device: "cuda:0" # "cpu" | "cuda:0"
+  num_worker: 2 # 1: 6.79 it/s 2: 14.76 it/s
+
+CONSTANT:
+  SEN_EMB_DIM: 768
+  ATARI_LANG_FOLDER: "../MontezumaRevenge_Goyal/atari-lang" # raw data, used for preprocessing
+  ATARI_ACITON_FOLDER: "../MontezumaRevenge_human/atari_v1/trajectories/revenge"
+  LW_RESIZE: 84
+  RL_RESIZE: 84
+  OD_RESIZE: 256 # YOLO object detection image size
+  CLIP_LENGTH: 150
+  N_ACTIONS: 8
+  ANNOTATION_FILE_SIZE: 6870
+  RANDOM_SEED: 12
+  IMG_MEAN: "[0.485 * 255.0, 0.456 * 255.0, 0.406 * 255.0]"
+  IMG_STD: "[0.229 * 255.0, 0.224 * 255.0, 0.225 * 255.0]"
+  PRETRAIN_WINDOW_SIZE: 8 # it means 4 * 2, it is also known as stride size
+
+
+
+data_files:
+  data_path: "data" # change this when you run the project on server
+  # train data
+  train_data_path: "${data_files.data_path}/training_data"
+
+  # test data
+  test_data_path: "${data_files.data_path}/testing_data"
+
+  # save data
+  saved_path_parent_folder: "saved_model"
+  saved_path_folder: "${data_files.saved_path_parent_folder}/default_folder"
+  save_every_epoch: False # if True, we save state dict at every epoch
+  use_wandb: False # if True, we will use wandb, usually we test once and set it to True
+
+
+

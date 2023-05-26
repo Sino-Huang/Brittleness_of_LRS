@@ -1,0 +1,73 @@
+defaults:
+  - default_config
+  - video_autoencoder_pretrain
+  - video_action_pretrain
+  - _self_
+
+hydra:
+  run:
+    dir: "outputs/${now:%Y-%m-%d}/lang_rew_module_${now:%H-%M-%S}"
+  job:
+#    name: "Updated_Lang_Rew_Event_Det_ver_has_obj_det-${data_files.pretrain_visual_encoder_use_object_detec}_relative_offset-${lang_rew_shaping_params.use_relative_offset}_Dim-${lang_rew_shaping_params.transformer_dim}_Action_pred-${lang_rew_shaping_params.use_action_prediction}_Neg_ratio-${lang_rew_shaping_params.normal_negative_ratio}"
+    name: "WithValidation-Updated-Lang_Rew_Binary_Cls_ver_has_obj_det-${data_files.pretrain_visual_encoder_use_object_detec}_relative_offset-${lang_rew_shaping_params.use_relative_offset}_Dim-${lang_rew_shaping_params.transformer_dim}_Action_pred-${lang_rew_shaping_params.use_action_prediction}_Neg_ratio-${lang_rew_shaping_params.normal_negative_ratio}"
+
+
+data_files:
+  saved_path_folder: "${data_files.saved_path_parent_folder}/lang_rew_shaping_module"
+  reward_shaping_module_state_dict_path: "${data_files.saved_path_folder}/reward_shaping_module_best_state_dict_loss.pth"
+  reward_shaping_module_state_dict_path_acc: "${data_files.saved_path_folder}/reward_shaping_module_best_state_dict_acc.pth"
+  reward_shaping_module_state_dict_path_iou: "${data_files.saved_path_folder}/reward_shaping_module_best_state_dict_iou.pth"
+  reward_shaping_module_state_dict_path_train: "${data_files.saved_path_folder}/reward_shaping_module_best_state_dict_train.pth"
+  reward_shaping_module_state_dict_path_train_acc: "${data_files.saved_path_folder}/reward_shaping_module_best_state_dict_train_acc.pth"
+
+
+  train_data_dict_path: "${data_files.train_data_path}/train_text_dict.pkl"  # 768 nd array
+  train_data_dict_hard_negatives_path: "${data_files.train_data_path}/train_text_dict_hard_negatives.pkl"
+
+  train_video_data_folder_path: "${data_files.train_data_path}/video_clip_5x_target_at_middle_stride_8_256"
+  task_level: 'easy_task' # easy_task, normal_task, hard_task
+  no_hard_instruction: "_no_hard" # "_no_hard" vs ""
+#  no_hard_instruction: "" # "_no_hard" vs ""
+  test_data_dict_path: "${data_files.test_data_path}/${data_files.task_level}/test_text_dict${data_files.no_hard_instruction}.pkl"  # 768 nd array
+  test_video_data_folder_path: "${data_files.test_data_path}/${data_files.task_level}/video_clip_testing_stride_8_256"
+
+
+
+  pretrain_model_folder_path: "saved_model/pretrained_model"
+  pretrain_visual_encoder_dict_path_with_object_detec: "${data_files.pretrain_model_folder_path}/torsonet_pretrained_object_det.pth"
+  pretrain_visual_encoder_dict_path_without_object_detec: "${data_files.pretrain_model_folder_path}/torsonet_pretrained_no_object_det.pth"
+  pretrain_visual_encoder_use_object_detec: True
+  pretrain_action_predictor_dict_path: "${data_files.pretrain_model_folder_path}/pretrained_action_predictor.pth"
+  pretrain_normal_negative_lang_rew_module_dict_path: "${data_files.pretrain_model_folder_path}/reward_shaping_module_best_state_dict_acc.pth"
+
+  use_wandb: True # if True, we will use wandb, usually we test once and set it to True
+
+
+
+lang_rew_shaping_params:
+  batch_size: 32
+  mode: "new" # new | continue | eval, continue means we continue to train the model, new means we train from scratch
+  wd: 5.0e-2 # weight decay
+  lr: 0.001 # initial learning rate 0.0007 for transformer
+  optimizer: "adam" # sgd | adam
+  n_epochs: 400 # number of epochs\
+  transformer_dim: 256
+  transformer_depth: 2
+  dropout_rate: 0.2
+  norm_layer: 'layernorm' # rmsnorm vs identity vs batchnorm vs layernorm
+  freeze_torso: True
+  use_relative_offset: True
+  use_action_prediction: True
+  iou_weight: 2 # from detr paper
+  coord_weight: 5
+  iou_conf_threshold: 0.2 # this is used to calculate accuracy for event detection model
+
+  # binary classification configs
+  normal_negative_ratio: 1.0 # ranging from 0.0 to 1.0, 1 means all are normal negative
+
+
+
+
+  result:
+    best_test_acc:
+    state_dict_path:

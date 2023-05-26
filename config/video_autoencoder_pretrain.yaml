@@ -1,0 +1,34 @@
+defaults:
+  - default_config
+  - _self_
+
+hydra:
+  run:
+    dir: "outputs/${now:%Y-%m-%d}/single_visual_mae_${now:%H-%M-%S}"
+  job:
+    name: "object_detec_ver_video_autoencoder_pretrain_with_annotation_input_size_${CONSTANT.LW_RESIZE}_output_size${CONSTANT.RL_RESIZE}"
+
+visual_encoder_params:
+  wd: 5.0e-2 # weight decay
+  lr: 0.001 # initial learning rate
+  optimizer: "adam" # sgd | adam
+  batch_size: 32
+
+  conv_depths: [3, 16, 9]
+  transformer_depths: 1
+  transformer_dims: 2048
+  attn_head_num: 8
+  drop_rate: 0.2
+
+  saved_path_folder: "${data_files.saved_path_parent_folder}/video_autoencoder_saved_model"
+  visual_encoder_state_dict_path: "${visual_encoder_params.saved_path_folder}/visual_encoder_best_state_dict.pth"
+#  video_example_path: "../MontezumaRevenge_human/pretrain_visual_encoder_annotated_video_dataset_256/0/1.mp4"
+  video_example_path: "../MontezumaRevenge_human/pretrain_visual_encoder_video_dataset_256/0/1.mp4"
+  visual_n_epoch: 300 # epoch for visual model
+
+
+data_files:
+#  raw_video_screenshot_file_target: "../MontezumaRevenge_human/pretrain_visual_encoder_annotated_video_dataset_256" # store atari montezuma's revenge videos
+  raw_video_screenshot_file_target: "../MontezumaRevenge_human/pretrain_visual_encoder_video_dataset_256" # this means no object detection pretrain
+  raw_video_screenshot_file_input: "../MontezumaRevenge_human/pretrain_visual_encoder_video_dataset_256" # store atari montezuma's revenge videos
+  use_wandb: True # if True, we will use wandb, usually we test once and set it to True
