@@ -42,20 +42,20 @@ python models/lang_rew_shaping_binary_classification_ver/train_lang_rew_module.p
 ```bash
 .
 ├── backbones					# backbone modules for DL models
-├── config						# config files for experiments
+├── config					# config files for experiments
 ├── custom_utils				# utils 
-├── data						# store training data, not uploaded
+├── data					# store training data, not uploaded
 ├── dataloader					# handling dataset using Nvidia dali library
 ├── models						# codes for non-sinmulated LRS models
 │   ├── lang_rew_shaping_binary_classification_ver	# binary classification output layer ver
 │   ├── lang_rew_shaping_event_detection_ver		# cosine similarity output layer ver
-│   ├── video_action_predictor						# non-sim LRS observation encoder
-│   └── video_autoencoder							# non-sim LRS observation encoder backbone
+│   ├── video_action_predictor				# non-sim LRS observation encoder
+│   └── video_autoencoder				# non-sim LRS observation encoder backbone
 ├── readme.md
 ├── requirements.txt		
-├── rl_trained_models								# rl policy models trained using Non-sim LRS
+├── rl_trained_models						# rl policy models trained using Non-sim LRS
 ├── rl_trained_models_test_false_positive			# rl policy models trained using Sim LRS
-├── rnd_rl_env										# Env for Non-sim LRS models
+├── rnd_rl_env							# Env for Non-sim LRS models
 ├── rnd_rl_env_false_positive_simulation			# Env for Sim LRS models
 
 
