@@ -67,6 +67,7 @@ python models/lang_rew_shaping_binary_classification_ver/train_lang_rew_module.p
 
 - Raw training data can be downloaded from [Atari Grand Challenge dataset](http://atarigrandchallenge.com/data). 
 - Sentence embedding encoders that we used in this project are from Huggingface platform
+- `data/video-clip-annotations.txt` contains the annotation data which was used to train non-simulated LRS model. The data was from ["IJCAI 2019 paper Using Natural Language for Reward Shaping in Reinforcement Learning."](https://github.com/prasoongoyal/rl-learn)
 
 
 
