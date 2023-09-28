@@ -1,6 +1,6 @@
 # Brittleness of Language Reward Shaping
 
-This is the code for AAAI submission *A Reminder of its Brittleness: Language Reward Shaping May Hinder Learning for Instruction Following Agents*
+This is the code for JAIR submission *A Reminder of its Brittleness: Language Reward Shaping May Hinder Learning for Instruction Following Agents*
 
 
 
